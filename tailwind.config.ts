@@ -10,5 +10,5 @@ export default {
     extend: {}
   },
 
-  plugins: [daisyui, typography, forms]
+  plugins: [typography, forms, daisyui]
 } satisfies Config;
