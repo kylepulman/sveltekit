@@ -1,5 +1,6 @@
 import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
+import daisyui from 'daisyui';
 import type { Config } from 'tailwindcss';
 
 export default {
@@ -9,5 +10,5 @@ export default {
     extend: {}
   },
 
-  plugins: [typography, forms]
+  plugins: [daisyui, typography, forms]
 } satisfies Config;
