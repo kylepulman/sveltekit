@@ -19,7 +19,5 @@ export const POST = async ({ request }) => {
 
   const result = await createPost(body.text)
 
-  return json({
-    result
-  })
+  return json(result)
 }
