@@ -1,5 +1,4 @@
 <script lang="ts">
-  import ArchiveBox from "$lib/icons/archive-box.svelte";
   import BellAlert from "$lib/icons/bell-alert.svelte";
   import Megaphone from "$lib/icons/megaphone.svelte";
 
@@ -10,20 +9,6 @@
   <header class="prose text-center">
     <h1>Kyle P. Ulman</h1>
     <p>I use TypeScript to build cool stuff for the web.</p>
-    <ul class="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box">
-      <li>
-        <a href="{import.meta.env.VITE_BSKY_ORIGIN_URL}/profile/kylepulman.com">
-          <Megaphone />
-          Bluesky
-        </a>
-      </li>
-      <li>
-        <a href="https://github.com/kylepulman">
-          <ArchiveBox />
-          GitHub
-        </a>
-      </li>
-    </ul>
   </header>
   <article class="space-y-4 my-6">
     {#each data.feed as post}
