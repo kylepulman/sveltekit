@@ -1,6 +1,12 @@
 import { API_BASIC } from "$env/static/private"
-import { createPost } from "$lib/bluesky"
+import { createPost, getMyPosts } from "$lib/bluesky"
 import { error, json } from "@sveltejs/kit"
+
+export const GET = async () => {
+  const result = await getMyPosts()
+
+  return json(result)
+}
 
 export const POST = async ({ request }) => {
   const basicAuth = request.headers.get('Authorization')

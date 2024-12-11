@@ -14,3 +14,9 @@ export const createPost = (text: string) => agent.post({
   text,
   createdAt: new Date().toISOString()
 })
+
+export const getMyPosts = () => agent.getAuthorFeed({ 
+  actor: agent.did ?? '',
+  filter: 'posts_no_replies',
+  limit: 10 
+})
