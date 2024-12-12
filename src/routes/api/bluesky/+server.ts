@@ -3,6 +3,7 @@ import { createPost, getMyPosts } from "$lib/bluesky"
 import { error, json } from "@sveltejs/kit"
 
 export const GET = async () => {
+  // const result = await import('./data.json')
   const result = await getMyPosts()
 
   return json(result)
