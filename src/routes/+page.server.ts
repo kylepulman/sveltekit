@@ -1,5 +1,6 @@
 import type { PageMetadata } from "$lib"
-import type { AppBskyFeedGetAuthorFeed, AppBskyFeedPost } from "@atproto/api"
+import { getMyPosts } from "$lib/bluesky"
+import type { AppBskyFeedPost } from "@atproto/api"
 
 type FeedItem = {
   _source: 'Pages' | 'Bsky'
@@ -37,14 +38,14 @@ const getPages = async () => {
   return feed
 }
 
-const fetchBsky = async (skFetch: typeof fetch) => {
-  const response = await skFetch('/api/bluesky')
-  const body = await response.json() as AppBskyFeedGetAuthorFeed.Response
+const fetchBsky = async () => {
+  const body = await getMyPosts()
+
+  console.log('Rate limit remaining:', body.headers['ratelimit-remaining'])
 
   const feed: FeedItem[] = []
 
-  if (response.status === 200) {
-
+  if (body.success === true) {
     body.data.feed.forEach((item) => {
       const record = item.post.record as AppBskyFeedPost.Record
 
@@ -57,17 +58,34 @@ const fetchBsky = async (skFetch: typeof fetch) => {
       })
     })
   } else {
-    console.error(response.status, await response.text())
+    console.error(body.success, body)
   }
 
   return feed
 }
 
-export const load = async ({ fetch }) => {
+export const load = async (event) => {
   const pagesFeed = await getPages()
-  const bskyFeed = await fetchBsky(fetch)
 
-  const feed: FeedItem[] = [...pagesFeed, ...bskyFeed]
+  const feed: FeedItem[] = pagesFeed
+  let bskyFeed: FeedItem[] = []
+
+  const bskyFeedCookie = event.cookies.get('bsky')
+  if (bskyFeedCookie) {
+    bskyFeed = JSON.parse(bskyFeedCookie)
+  } else {
+    bskyFeed = await fetchBsky()
+
+    event.cookies.set('bsky', JSON.stringify(bskyFeed), {
+      path: '/',
+      httpOnly: true,
+      maxAge: 5 * 60
+    })
+  }
+
+  bskyFeed.forEach((item) => {
+    feed.push(item)
+  })
 
   feed.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
